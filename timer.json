@@ -1,0 +1,28 @@
+{
+  "meta": {
+    "last_updated": "2026-02-02 18:05:00",
+    "version": "1.0"
+  },
+  "schedule": [
+    {
+      "time": "20:15",
+      "disabled": false,
+      "username": "ozlem_kedi"
+    },
+    {
+      "time": "20:30",
+      "disabled": false,
+      "username": "ozlem_kedi"
+    },
+    {
+      "time": "20:45",
+      "disabled": false,
+      "username": "ozlem_kedi"
+    },
+    {
+      "time": "14:30",
+      "disabled": true,
+      "username": "kizilkobragorukle"
+    }
+  ]
+}
