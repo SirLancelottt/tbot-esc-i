@@ -54,7 +54,7 @@ MESSAGES = [
     {'time': '19:45', 'message': 'Simge Kimdir?'},
     {'time': '20:00', 'message': 'Çağla Kimdir?'},
     {'time': '20:00', 'message': '🌆 <b>AKŞAM VAKTİ</b>\n\nGünün yorgunluğunu atma zamanı! 🏡'},
-    {'time': '24:00', 'message': '🌙 <b>İYİ GECELER</b>\n\nYarın daha güzel bir gün olacak! ✨'}
+    {'time': '23:59', 'message': '🌙 <b>İYİ GECELER</b>\n\nYarın daha güzel bir gün olacak! ✨'}
 ]
 
 # ==================== FONKSİYONLAR ====================
