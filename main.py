@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-ZAMANLANMIŞ MESAJ BOT - RAILWAY DEPLOY
+ZAMANLANMIŞ MESAJ BOT - RAILWAY DOCKER
 """
 
 import os
@@ -125,10 +125,6 @@ def setup_schedule():
     
     log.info(f"🤖 Bot başladı - {active_schedules} mesaj bekleniyor")
     
-    # Kullanıcıları logla
-    for username, pool in messages_dict.items():
-        log.info(f"👤 @{username}: {len(pool)} mesaj")
-    
     scheduled_count = 0
     for item in schedule_list:
         if item.get('disabled', False):
@@ -170,7 +166,7 @@ def setup_schedule():
 # ==================== ANA PROGRAM ====================
 def main():
     log.info("=" * 50)
-    log.info("TELEGRAM ZAMANLANMIŞ MESAJ BOTU")
+    log.info("TELEGRAM ZAMANLANMIŞ MESAJ BOTU - DOCKER")
     log.info("=" * 50)
     
     if not TOKEN:
