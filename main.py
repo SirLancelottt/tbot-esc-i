@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-TELEGRAM ZAMANLANMIŞ MESAJ BOT - RAILWAY FINAL FIXED
+TELEGRAM ZAMANLANMIŞ MESAJ BOT - RAILWAY FINAL FIXED ASYNC
 """
 
 import os
@@ -15,7 +15,8 @@ import pytz
 import threading
 from datetime import datetime
 from http.server import HTTPServer, BaseHTTPRequestHandler
-from telegram import Bot, error
+from telegram import Bot
+from telegram.error import Unauthorized  # ⭐ DÜZELTME
 
 # ==================== AYARLAR ====================
 TOKEN = os.getenv('TELEGRAM_TOKEN')
@@ -70,6 +71,21 @@ async def send_startup_message():
         return True
     except Exception as e:
         log.error(f"❌ Başlangıç mesajı hatası: {e}")
+        return False
+
+# ==================== TOKEN TEST ====================
+async def test_token():
+    """Token'in geçerli olup olmadığını test et"""
+    try:
+        bot = Bot(token=TOKEN)
+        bot_info = await bot.get_me()  # ⭐ AWAIT EKLENDİ
+        log.info(f"✅ Token geçerli! Bot: @{bot_info.username}")
+        return True
+    except Unauthorized:
+        log.error("❌ Token geçersiz! Yeni token alın ve Railway'da güncelleyin.")
+        return False
+    except Exception as e:
+        log.error(f"❌ Token test hatası: {e}")
         return False
 
 # ==================== JSON YÜKLEME ====================
@@ -205,16 +221,16 @@ def setup_schedule():
             log.error(f"✗ Zamanlama hatası: {e}")
     
     log.info(f"✅ {scheduled_count} zamanlama ayarlandı")
-    return schedule, active_schedules  # ⭐ FIX: active_count DEĞİL, active_schedules
+    return schedule, active_schedules
 
 # ==================== ANA PROGRAM ====================
 def main():
     print("\n" + "="*60)
-    print("🤖 TELEGRAM BOT - RAILWAY FINAL FIXED")
+    print("🤖 TELEGRAM BOT - RAILWAY FINAL FIXED ASYNC")
     print("="*60)
     print(f"📱 Token: {'✅ VAR' if TOKEN else '❌ YOK'}")
     if TOKEN:
-        print(f"📱 Token İlk 10: {TOKEN[:10]}...")  # Debug için
+        print(f"📱 Token İlk 10: {TOKEN[:10]}...")
     print(f"📢 Kanal: {CHANNEL}")
     print("="*60)
     
@@ -222,16 +238,10 @@ def main():
         log.error("❌ TELEGRAM_TOKEN bulunamadı!")
         sys.exit(1)
     
-    # Token test
-    try:
-        bot = Bot(token=TOKEN)
-        bot_info = bot.get_me()
-        log.info(f"✅ Token geçerli! Bot: @{bot_info.username}")
-    except error.Unauthorized:
-        log.error("❌ Token geçersiz! Yeni token alın ve Railway'da güncelleyin.")
-        return
-    except Exception as e:
-        log.error(f"❌ Token test hatası: {e}")
+    # TOKEN TEST (ASYNC)
+    log.info("🔍 Token test ediliyor...")
+    token_valid = asyncio.run(test_token())  # ⭐ ASYNC ÇAĞIR
+    if not token_valid:
         return
     
     # BAŞLANGIÇ MESAJI
@@ -242,7 +252,7 @@ def main():
         log.warning(f"⚠️ Başlangıç mesajı gönderilemedi: {e}")
     
     # ZAMANLAMALARI AYARLA
-    scheduler, active_schedules = setup_schedule()  # ⭐ FIX: active_schedules
+    scheduler, active_schedules = setup_schedule()
     
     if not scheduler:
         log.error("❌ Zamanlama ayarlanamadı!")
