@@ -23,11 +23,11 @@ author = "agent"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "python last_json.py"
+args = "python json_last.py"
 
 [workflows.workflow.metadata]
 outputType = "console"
 
 [deployment]
 deploymentTarget = "vm"
-run = ["python", "last_json.py"]
+run = ["python", "json_last.py"]
