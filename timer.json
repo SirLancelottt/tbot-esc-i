@@ -5,17 +5,27 @@
   },
   "schedule": [
     {
-      "time": "20:15",
+      "time": "21:05",
       "disabled": false,
       "username": "ozlem_kedi"
     },
     {
-      "time": "20:30",
+      "time": "21:10",
       "disabled": false,
       "username": "ozlem_kedi"
     },
     {
-      "time": "20:45",
+      "time": "21:15",
+      "disabled": false,
+      "username": "ozlem_kedi"
+    },    
+    {
+      "time": "21:20",
+      "disabled": false,
+      "username": "ozlem_kedi"
+    },    
+    {
+      "time": "21:25",
       "disabled": false,
       "username": "ozlem_kedi"
     },
