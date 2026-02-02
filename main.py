@@ -1,4 +1,29 @@
 #!/usr/bin/env python3
+import os
+import sys
+
+# ==================== DEBUG ====================
+print("=" * 60)
+print("🔍 DEBUG MODE - RAILWAY BOT")
+print("=" * 60)
+
+TOKEN = os.getenv('TELEGRAM_TOKEN')
+CHANNEL = os.getenv('TELEGRAM_CHANNEL', '@bursadeneyimlerimiz')
+
+print(f"TOKEN VAR MI: {'✅ EVET' if TOKEN else '❌ HAYIR'}")
+if TOKEN:
+    print(f"TOKEN UZUNLUĞU: {len(TOKEN)} karakter")
+    print(f"TOKEN İLK 15: {TOKEN[:15]}...")
+print(f"CHANNEL: {CHANNEL}")
+print("=" * 60)
+
+# Eğer token yoksa çık
+if not TOKEN:
+    print("❌ TELEGRAM_TOKEN bulunamadı! Railway Variables kontrol edin.")
+    sys.exit(1)
+# ==================== DEBUG SONU ====================
+
+#!/usr/bin/env python3
 """
 ZAMANLANMIŞ MESAJ BOT - RAILWAY DOCKER
 """
