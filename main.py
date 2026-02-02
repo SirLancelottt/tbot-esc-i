@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 """
-TELEGRAM ZAMANLANMIŞ MESAJ BOT - RAILWAY FINAL
-WITH HTTP SERVER & STARTUP MESSAGE
+TELEGRAM ZAMANLANMIŞ MESAJ BOT - RAILWAY FINAL FIXED
 """
 
 import os
@@ -43,17 +42,15 @@ class HealthHandler(BaseHTTPRequestHandler):
         self.wfile.write(b'Bot aktif!')
     
     def log_message(self, format, *args):
-        pass  # Log spam'ini engelle
+        pass
 
 def run_health_server():
-    """Railway container'ı durdurmamak için HTTP server"""
     server = HTTPServer(('0.0.0.0', 8080), HealthHandler)
     print("🌐 Health server başladı: 0.0.0.0:8080")
     server.serve_forever()
 
 # ==================== BOT BAŞLANGIÇ MESAJI ====================
 async def send_startup_message():
-    """Bot başladığında kanala mesaj gönder"""
     try:
         bot = Bot(token=TOKEN)
         startup_msg = (
@@ -208,14 +205,16 @@ def setup_schedule():
             log.error(f"✗ Zamanlama hatası: {e}")
     
     log.info(f"✅ {scheduled_count} zamanlama ayarlandı")
-    return schedule, active_count
+    return schedule, active_schedules  # ⭐ FIX: active_count DEĞİL, active_schedules
 
 # ==================== ANA PROGRAM ====================
 def main():
     print("\n" + "="*60)
-    print("🤖 TELEGRAM BOT - RAILWAY FINAL VERSION")
+    print("🤖 TELEGRAM BOT - RAILWAY FINAL FIXED")
     print("="*60)
     print(f"📱 Token: {'✅ VAR' if TOKEN else '❌ YOK'}")
+    if TOKEN:
+        print(f"📱 Token İlk 10: {TOKEN[:10]}...")  # Debug için
     print(f"📢 Kanal: {CHANNEL}")
     print("="*60)
     
@@ -223,31 +222,41 @@ def main():
         log.error("❌ TELEGRAM_TOKEN bulunamadı!")
         sys.exit(1)
     
-    # 1. BAŞLANGIÇ MESAJINI GÖNDER
+    # Token test
+    try:
+        bot = Bot(token=TOKEN)
+        bot_info = bot.get_me()
+        log.info(f"✅ Token geçerli! Bot: @{bot_info.username}")
+    except error.Unauthorized:
+        log.error("❌ Token geçersiz! Yeni token alın ve Railway'da güncelleyin.")
+        return
+    except Exception as e:
+        log.error(f"❌ Token test hatası: {e}")
+        return
+    
+    # BAŞLANGIÇ MESAJI
     log.info("📨 Başlangıç mesajı gönderiliyor...")
     try:
         asyncio.run(send_startup_message())
     except Exception as e:
         log.warning(f"⚠️ Başlangıç mesajı gönderilemedi: {e}")
     
-    # 2. ZAMANLAMALARI AYARLA
-    scheduler, active_count = setup_schedule()
+    # ZAMANLAMALARI AYARLA
+    scheduler, active_schedules = setup_schedule()  # ⭐ FIX: active_schedules
     
     if not scheduler:
         log.error("❌ Zamanlama ayarlanamadı!")
         return
     
-    log.info(f"⏰ {active_count} mesaj bekleniyor...")
+    log.info(f"⏰ {active_schedules} mesaj bekleniyor...")
     log.info("✅ Bot tamamen hazır!")
     
-    # 3. ANA DÖNGÜ
+    # ANA DÖNGÜ
     activity_counter = 0
     try:
         while True:
-            # Schedule çalıştır
             schedule.run_pending()
             
-            # Railway için aktivite
             activity_counter += 1
             
             # Her 30 saniyede bir nokta
@@ -268,9 +277,9 @@ def main():
 
 # ==================== PROGRAM BAŞLATMA ====================
 if __name__ == '__main__':
-    # HTTP Health Server'ı başlat (Railway container durmasın)
+    # HTTP Server başlat
     health_thread = threading.Thread(target=run_health_server, daemon=True)
     health_thread.start()
     
-    # Ana bot'u başlat
+    # Ana bot
     main()
