@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-TELEGRAM ZAMANLANMIŞ MESAJ BOT - RAILWAY FINAL FIXED ASYNC
+TELEGRAM BOT - RAILWAY ULTIMATE FIX
 """
 
 import os
@@ -16,280 +16,168 @@ import threading
 from datetime import datetime
 from http.server import HTTPServer, BaseHTTPRequestHandler
 from telegram import Bot
-from telegram.error import Unauthorized  # ⭐ DÜZELTME
+from telegram.error import Unauthorized
 
 # ==================== AYARLAR ====================
 TOKEN = os.getenv('TELEGRAM_TOKEN')
 CHANNEL = os.getenv('TELEGRAM_CHANNEL', '@bursadeneyimlerimiz')
 
-# JSON dosyaları
-SCHEDULE_LOCAL = "timer.json"
-MESSAGES_LOCAL = "message.json"
-
 # ==================== LOG ====================
 logging.basicConfig(
     level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-    handlers=[logging.StreamHandler(sys.stdout)]
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 )
 log = logging.getLogger(__name__)
 
-# ==================== HTTP HEALTH SERVER ====================
+print("\n" + "="*60)
+print("🚀 TELEGRAM BOT - ULTIMATE FIX VERSION")
+print("="*60)
+print(f"Token: {'✅' if TOKEN else '❌'}")
+print(f"Kanal: {CHANNEL}")
+print("="*60)
+
+# ==================== HTTP SERVER ====================
 class HealthHandler(BaseHTTPRequestHandler):
     def do_GET(self):
         self.send_response(200)
-        self.send_header('Content-type', 'text/plain')
         self.end_headers()
-        self.wfile.write(b'Bot aktif!')
-    
-    def log_message(self, format, *args):
+        self.wfile.write(b'OK')
+    def log_message(self, *args):
         pass
 
-def run_health_server():
+def health_server():
     server = HTTPServer(('0.0.0.0', 8080), HealthHandler)
-    print("🌐 Health server başladı: 0.0.0.0:8080")
+    print("🌐 Health: 0.0.0.0:8080")
     server.serve_forever()
 
-# ==================== BOT BAŞLANGIÇ MESAJI ====================
-async def send_startup_message():
-    try:
-        bot = Bot(token=TOKEN)
-        startup_msg = (
-            "🤖 *BOT BAŞLATILDI*\n\n"
-            "✅ Zamanlanmış mesaj sistemi aktif\n"
-            "⏰ Otomatik gönderim başladı\n"
-            "📊 Sistem: Railway Docker\n\n"
-            "_Her şey yolunda!_ ✨"
-        )
-        
-        await bot.send_message(
-            chat_id=CHANNEL,
-            text=startup_msg,
-            parse_mode='Markdown'
-        )
-        log.info("✅ Başlangıç mesajı gönderildi")
-        return True
-    except Exception as e:
-        log.error(f"❌ Başlangıç mesajı hatası: {e}")
-        return False
-
 # ==================== TOKEN TEST ====================
-async def test_token():
-    """Token'in geçerli olup olmadığını test et"""
+async def check_token():
     try:
         bot = Bot(token=TOKEN)
-        bot_info = await bot.get_me()  # ⭐ AWAIT EKLENDİ
-        log.info(f"✅ Token geçerli! Bot: @{bot_info.username}")
+        me = await bot.get_me()
+        print(f"✅ Bot: @{me.username}")
         return True
     except Unauthorized:
-        log.error("❌ Token geçersiz! Yeni token alın ve Railway'da güncelleyin.")
+        print("❌ Token geçersiz!")
         return False
     except Exception as e:
-        log.error(f"❌ Token test hatası: {e}")
+        print(f"❌ Hata: {e}")
         return False
 
-# ==================== JSON YÜKLEME ====================
-def load_all_jsons():
+# ==================== BAŞLANGIÇ MESAJI ====================
+async def send_welcome():
     try:
-        with open(SCHEDULE_LOCAL, 'r', encoding='utf-8') as f:
-            schedule_data = json.load(f)
-        with open(MESSAGES_LOCAL, 'r', encoding='utf-8') as f:
-            messages_data = json.load(f)
-        return schedule_data, messages_data
+        bot = Bot(token=TOKEN)
+        msg = "🤖 *BOT AKTİF*\n\nZamanlanmış mesaj sistemi çalışıyor! ✅"
+        await bot.send_message(CHANNEL, msg, parse_mode='Markdown')
+        print("📨 Başlangıç mesajı gönderildi")
     except Exception as e:
-        log.error(f"JSON okuma hatası: {e}")
-        return None, None
+        print(f"⚠️ Başlangıç mesajı hatası: {e}")
 
 # ==================== MESAJ GÖNDERME ====================
-async def send_scheduled_message(schedule_item, messages_dict):
+def load_jsons():
     try:
-        if schedule_item.get('disabled', False):
-            return False
-        
-        username = schedule_item.get('username', '')
-        
-        if not username or username not in messages_dict:
-            return False
-        
-        message_pool = messages_dict[username]
-        if not message_pool:
-            return False
-        
-        message_data = random.choice(message_pool)
-        bot = Bot(token=TOKEN)
-        message_text = message_data.get('text', '')
-        
-        # MESAJI OLDUĞU GİBİ GÖNDER
-        final_message = message_text
-        
-        log.info(f"📤 @{username} gönderiliyor...")
-        
-        msg_type = message_data.get('type', 'text_only')
-        
-        if msg_type == 'with_image':
-            image_url = message_data.get('image_url')
-            
-            if image_url:
-                await bot.send_photo(
-                    chat_id=CHANNEL,
-                    photo=image_url,
-                    caption=final_message,
-                    parse_mode='HTML'
-                )
-                log.info(f"✅ @{username} - Resimli")
-            else:
-                await bot.send_message(
-                    chat_id=CHANNEL,
-                    text=final_message,
-                    parse_mode='HTML'
-                )
-                log.info(f"✅ @{username} - Metin")
-        
-        else:
-            await bot.send_message(
-                chat_id=CHANNEL,
-                text=final_message,
-                parse_mode='HTML'
-            )
-            log.info(f"✅ @{username} - Metin")
-            
-        return True
-        
+        with open("timer.json", "r", encoding="utf-8") as f:
+            timer = json.load(f)
+        with open("message.json", "r", encoding="utf-8") as f:
+            messages = json.load(f)
+        return timer, messages
     except Exception as e:
-        log.error(f"❌ Gönderme hatası: {e}")
-        return False
+        print(f"❌ JSON hatası: {e}")
+        return None, None
 
-def create_message_sender(schedule_item, messages_dict):
+async def send_message(username, text):
+    try:
+        bot = Bot(token=TOKEN)
+        await bot.send_message(CHANNEL, text, parse_mode='HTML')
+        print(f"✅ @{username} gönderildi")
+    except Exception as e:
+        print(f"❌ Gönderme hatası: {e}")
+
+def create_sender(username, text):
     def sender():
-        asyncio.run(send_scheduled_message(schedule_item, messages_dict))
+        asyncio.run(send_message(username, text))
     return sender
-
-# ==================== ZAMANLAMA AYARI ====================
-def setup_schedule():
-    log.info("🚀 Zamanlamalar ayarlanıyor...")
-    
-    schedule_data, messages_data = load_all_jsons()
-    
-    if not schedule_data or not messages_data:
-        log.error("❌ JSON'lar yüklenemedi!")
-        return None, 0
-    
-    schedule_list = schedule_data.get('schedule', [])
-    messages_dict = messages_data.get('messages', {})
-    
-    active_schedules = 0
-    for item in schedule_list:
-        if not item.get('disabled', False):
-            active_schedules += 1
-    
-    log.info(f"📊 {active_schedules} aktif zamanlama")
-    log.info(f"💬 {len(messages_dict)} kullanıcı")
-    
-    scheduled_count = 0
-    for item in schedule_list:
-        if item.get('disabled', False):
-            continue
-        
-        tr_time = item.get('time')
-        username = item.get('username', '')
-        
-        if not tr_time or not username or username not in messages_dict:
-            continue
-        
-        try:
-            tr_tz = pytz.timezone('Europe/Istanbul')
-            hour, minute = map(int, tr_time.split(':'))
-            today = datetime.now().date()
-            
-            tr_datetime = tr_tz.localize(
-                datetime(today.year, today.month, today.day, hour, minute, 0)
-            )
-            utc_datetime = tr_datetime.astimezone(pytz.UTC)
-            utc_time = utc_datetime.strftime('%H:%M')
-            
-        except Exception as e:
-            log.error(f"⏰ Zaman hatası: {e}")
-            continue
-        
-        try:
-            sender_func = create_message_sender(item, messages_dict)
-            schedule.every().day.at(utc_time).do(sender_func)
-            log.info(f"✓ {tr_time} TRT → {utc_time} UTC - @{username}")
-            scheduled_count += 1
-            
-        except Exception as e:
-            log.error(f"✗ Zamanlama hatası: {e}")
-    
-    log.info(f"✅ {scheduled_count} zamanlama ayarlandı")
-    return schedule, active_schedules
 
 # ==================== ANA PROGRAM ====================
 def main():
-    print("\n" + "="*60)
-    print("🤖 TELEGRAM BOT - RAILWAY FINAL FIXED ASYNC")
-    print("="*60)
-    print(f"📱 Token: {'✅ VAR' if TOKEN else '❌ YOK'}")
-    if TOKEN:
-        print(f"📱 Token İlk 10: {TOKEN[:10]}...")
-    print(f"📢 Kanal: {CHANNEL}")
-    print("="*60)
-    
     if not TOKEN:
-        log.error("❌ TELEGRAM_TOKEN bulunamadı!")
-        sys.exit(1)
-    
-    # TOKEN TEST (ASYNC)
-    log.info("🔍 Token test ediliyor...")
-    token_valid = asyncio.run(test_token())  # ⭐ ASYNC ÇAĞIR
-    if not token_valid:
+        print("❌ Token yok!")
         return
     
-    # BAŞLANGIÇ MESAJI
-    log.info("📨 Başlangıç mesajı gönderiliyor...")
-    try:
-        asyncio.run(send_startup_message())
-    except Exception as e:
-        log.warning(f"⚠️ Başlangıç mesajı gönderilemedi: {e}")
-    
-    # ZAMANLAMALARI AYARLA
-    scheduler, active_schedules = setup_schedule()
-    
-    if not scheduler:
-        log.error("❌ Zamanlama ayarlanamadı!")
+    # Token test
+    if not asyncio.run(check_token()):
         return
     
-    log.info(f"⏰ {active_schedules} mesaj bekleniyor...")
-    log.info("✅ Bot tamamen hazır!")
+    # Başlangıç mesajı
+    asyncio.run(send_welcome())
     
-    # ANA DÖNGÜ
-    activity_counter = 0
+    # JSON yükle
+    timer_data, msg_data = load_jsons()
+    if not timer_data or not msg_data:
+        return
+    
+    schedules = timer_data.get('schedule', [])
+    messages = msg_data.get('messages', {})
+    
+    print(f"\n⏰ {len(schedules)} zamanlama")
+    print(f"💬 {len(messages)} kullanıcı")
+    
+    # Zamanlamaları ayarla
+    for item in schedules:
+        if item.get('disabled'):
+            continue
+        
+        time_str = item.get('time')
+        username = item.get('username')
+        
+        if not time_str or not username or username not in messages:
+            continue
+        
+        # UTC'ye çevir
+        try:
+            tr_tz = pytz.timezone('Europe/Istanbul')
+            hour, minute = map(int, time_str.split(':'))
+            today = datetime.now().date()
+            
+            tr_time = tr_tz.localize(datetime(today.year, today.month, today.day, hour, minute, 0))
+            utc_time = tr_time.astimezone(pytz.UTC).strftime('%H:%M')
+            
+            # Rastgele mesaj seç
+            pool = messages[username]
+            if pool:
+                msg = random.choice(pool).get('text', '')
+                schedule.every().day.at(utc_time).do(create_sender(username, msg))
+                print(f"✓ {time_str} → {utc_time} UTC - @{username}")
+        except Exception as e:
+            print(f"✗ Zamanlama hatası: {e}")
+    
+    print("\n✅ Bot hazır! Bekleniyor...\n")
+    
+    # Ana döngü
+    counter = 0
     try:
         while True:
             schedule.run_pending()
+            time.sleep(1)
+            counter += 1
             
-            activity_counter += 1
-            
-            # Her 30 saniyede bir nokta
-            if activity_counter % 30 == 0:
+            if counter % 30 == 0:
                 print(".", end="", flush=True)
             
-            # Her 5 dakikada log
-            if activity_counter % 300 == 0:
-                minutes = activity_counter // 60
-                log.info(f"⏱️ {minutes} dakikadır kesintisiz çalışıyor")
-            
-            time.sleep(1)
-            
+            if counter % 300 == 0:
+                print(f"\n⏱️ {counter//60} dakika çalıştı")
+                
     except KeyboardInterrupt:
-        log.info("\n👋 Bot durduruldu")
+        print("\n👋 Durduruldu")
     except Exception as e:
-        log.error(f"💥 Beklenmeyen hata: {e}")
+        print(f"\n💥 Hata: {e}")
 
-# ==================== PROGRAM BAŞLATMA ====================
+# ==================== BAŞLAT ====================
 if __name__ == '__main__':
-    # HTTP Server başlat
-    health_thread = threading.Thread(target=run_health_server, daemon=True)
-    health_thread.start()
+    # Health server
+    thread = threading.Thread(target=health_server, daemon=True)
+    thread.start()
     
     # Ana bot
     main()
