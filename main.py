@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 """
-ZAMANLANMIŞ MESAJ BOT - RAILWAY DOCKER
-7/24 ÇALIŞAN VERSİYON
+TELEGRAM ZAMANLANMIŞ MESAJ BOT - RAILWAY FIXED
+CONTAINER DURMAYACAK ŞEKİLDE
 """
 
 import os
+import sys
 import time
 import json
 import random
@@ -13,7 +14,7 @@ import logging
 import asyncio
 import pytz
 from datetime import datetime
-from telegram import Bot
+from telegram import Bot, error
 
 # ==================== AYARLAR ====================
 TOKEN = os.getenv('TELEGRAM_TOKEN')
@@ -26,23 +27,24 @@ MESSAGES_LOCAL = "message.json"
 # ==================== LOG ====================
 logging.basicConfig(
     level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.StreamHandler(sys.stdout)  # Railway log için
+    ]
 )
 log = logging.getLogger(__name__)
 
-# ==================== DEBUG ====================
-print("=" * 60)
-print("🔍 RAILWAY BOT BAŞLATILIYOR")
-print("=" * 60)
-print(f"TOKEN VAR MI: {'✅ EVET' if TOKEN else '❌ HAYIR'}")
-if TOKEN:
-    print(f"TOKEN UZUNLUĞU: {len(TOKEN)} karakter")
-print(f"CHANNEL: {CHANNEL}")
-print("=" * 60)
+# ==================== BAŞLANGIÇ ====================
+print("\n" + "="*60)
+print("🤖 TELEGRAM BOT - RAILWAY FIXED VERSION")
+print("="*60)
+print(f"📱 Token: {'✅ VAR' if TOKEN else '❌ YOK'}")
+print(f"📢 Kanal: {CHANNEL}")
+print("="*60)
 
 if not TOKEN:
     log.error("❌ TELEGRAM_TOKEN bulunamadı! Railway Variables kontrol edin.")
-    exit(1)
+    sys.exit(1)
 
 # ==================== JSON YÜKLEME ====================
 def load_all_jsons():
@@ -75,7 +77,7 @@ async def send_scheduled_message(schedule_item, messages_dict):
         bot = Bot(token=TOKEN)
         message_text = message_data.get('text', '')
         
-        # SADECE MESAJI GÖNDER - HİÇBİR ŞEY EKLEME!
+        # MESAJI OLDUĞU GİBİ GÖNDER
         final_message = message_text
         
         log.info(f"📤 @{username} gönderiliyor...")
@@ -111,8 +113,11 @@ async def send_scheduled_message(schedule_item, messages_dict):
             
         return True
         
+    except error.Unauthorized:
+        log.error("❌ Token geçersiz! Yeni token alın.")
+        return False
     except Exception as e:
-        log.error(f"❌ Gönderme hatası @{schedule_item.get('username', '')}: {e}")
+        log.error(f"❌ Gönderme hatası: {e}")
         return False
 
 def create_message_sender(schedule_item, messages_dict):
@@ -122,7 +127,7 @@ def create_message_sender(schedule_item, messages_dict):
 
 # ==================== ZAMANLAMA AYARI ====================
 def setup_schedule():
-    log.info("🚀 Bot başlatılıyor...")
+    log.info("🚀 Zamanlamalar ayarlanıyor...")
     
     schedule_data, messages_data = load_all_jsons()
     
@@ -138,11 +143,8 @@ def setup_schedule():
         if not item.get('disabled', False):
             active_schedules += 1
     
-    log.info(f"🤖 Bot başladı - {active_schedules} mesaj bekleniyor")
-    
-    # Kullanıcıları logla
-    for username, pool in messages_dict.items():
-        log.info(f"👤 @{username}: {len(pool)} mesaj")
+    log.info(f"📊 {active_schedules} aktif zamanlama")
+    log.info(f"💬 {len(messages_dict)} kullanıcı")
     
     scheduled_count = 0
     for item in schedule_list:
@@ -184,9 +186,9 @@ def setup_schedule():
 
 # ==================== ANA PROGRAM ====================
 def main():
-    log.info("=" * 50)
-    log.info("TELEGRAM ZAMANLANMIŞ MESAJ BOTU - RAILWAY")
-    log.info("=" * 50)
+    log.info("="*50)
+    log.info("🤖 BOT ÇALIŞMAYA BAŞLADI")
+    log.info("="*50)
     
     scheduler, active_count = setup_schedule()
     
@@ -194,22 +196,38 @@ def main():
         log.error("❌ Zamanlama ayarlanamadı!")
         return
     
-    log.info("⏳ Zamanlanmış mesajlar bekleniyor...")
+    log.info(f"⏰ {active_count} mesaj bekleniyor...")
     
-    # ⭐ RAILWAY İÇİN SONSUZ DÖNGÜ - CONTAINER DURMASIN!
-    heartbeat_counter = 0
+    # ⭐⭐ RAILWAY İÇİN KRİTİK: SÜREKLİ ACTIVITY ⭐⭐
+    activity_counter = 0
+    last_log_time = time.time()
+    
     try:
         while True:
-            scheduler.run_pending()
-            time.sleep(1)
-            heartbeat_counter += 1
+            # 1. Schedule'ı çalıştır
+            schedule.run_pending()
             
-            # Her 30 saniyede bir heartbeat (opsiyonel)
-            if heartbeat_counter % 30 == 0:
-                log.debug("💓 Bot aktif...")
+            # 2. Railway için activity yarat
+            activity_counter += 1
+            
+            # ⭐ HER 10 SANİYEDE BİR EKRANA YAZ (CONTAINER DURMASIN)
+            current_time = time.time()
+            if current_time - last_log_time >= 10:  # 10 saniyede bir
+                # Ekrana aktivite göster
+                print("💓", end="", flush=True)
                 
+                # Her 6 aktivitede bir log (1 dakika)
+                if activity_counter % 6 == 0:
+                    minutes_running = (activity_counter * 10) // 60
+                    log.info(f"⏱️ {minutes_running} dakikadır çalışıyor...")
+                
+                last_log_time = current_time
+            
+            # 3. Kısa bekle
+            time.sleep(1)
+            
     except KeyboardInterrupt:
-        log.info("👋 Bot durduruldu")
+        log.info("\n👋 Bot durduruldu")
     except Exception as e:
         log.error(f"💥 Beklenmeyen hata: {e}")
 
