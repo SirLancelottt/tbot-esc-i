@@ -23,11 +23,11 @@ author = "agent"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "python testerz.py"
+args = "python rose_test_1.py"
 
 [workflows.workflow.metadata]
 outputType = "console"
 
 [deployment]
 deploymentTarget = "vm"
-run = ["python", "testerz.py"]
+run = ["python", "rose_test_1.py"]
