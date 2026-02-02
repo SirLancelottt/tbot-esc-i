@@ -183,7 +183,7 @@ class TelegramSchedulerBot:
                 "🚀 <b>BOT AKTİF!</b>\n\n"
                 f"🤖 Bot: @{bot_info.username}\n"
                 f"📅 Tarih: {self.get_tr_time()}\n"
-                f"📍 Host: Render.com\n\n"
+                f"📍 Host: RepLit.com\n\n"
                 "✅ Zamanlanmış mesajlar hazır!"
             )
             
