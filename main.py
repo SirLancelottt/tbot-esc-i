@@ -1,212 +1,125 @@
 import os
-import logging
+import sys
+import telegram
+import asyncio
 import schedule
 import time
-import pytz
+import logging
 from datetime import datetime
-from telegram import Bot
-from telegram.error import TelegramError
+import pytz
 
 # ==================== KONFİGÜRASYON ====================
-# Replit Secrets'tan alınacak değişkenler
-TOKEN = os.getenv('TELEGRAM_TOKEN')
-CHANNEL = os.getenv('TELEGRAM_CHANNEL', '@bursadeneyimlerimiz')  # Varsayılan kanal
+# Replit'te Secrets kullanacağız
+TOKEN = os.getenv("TELEGRAM_TOKEN", "TEMP_TOKEN")
+CHANNEL = os.getenv("TELEGRAM_CHANNEL", "@temp_channel")
 
-# Zamanlamalar (Türkiye saati - TRT)
-MESSAGE_SCHEDULES = [
-    {'time': '09:00', 'message': '⏰ <b>GÜNAYDIN!</b>\n\nBugün harika bir gün olacak! ☀️'},
-    {'time': '12:00', 'message': '☀️ <b>ÖĞLE VAKTİ</b>\n\nAra verip kendinize iyi bakın! 🍽️'},
-    {'time': '14:10', 'message': 'Gerçek Bayanlar Nerde?'},
-    {'time': '14:20', 'message': 'Kedicik Kimdir?'},
-    {'time': '14:30', 'message': 'Simge Kimdir?'},
-    {'time': '15:00', 'message': 'Çağla Kimdir?'},
-    {'time': '15:15', 'message': 'Gerçek Bayanlar Nerde?'},
-    {'time': '15:30', 'message': 'Kedicik Kimdir?'},
-    {'time': '15:45', 'message': 'Simge Kimdir?'},
-    {'time': '16:00', 'message': 'Çağla Kimdir?'},
-    {'time': '16:15', 'message': 'Gerçek Bayanlar Nerde?'},
-    {'time': '16:30', 'message': 'Kedicik Kimdir?'},
-    {'time': '16:45', 'message': 'Simge Kimdir?'},
-    {'time': '17:00', 'message': 'Çağla Kimdir?'},
-    {'time': '20:00', 'message': '🌆 <b>AKŞAM VAKTİ</b>\n\nGünün yorgunluğunu atma zamanı! 🏡'},
-    {'time': '24:00', 'message': '🌙 <b>İYİ GECELER</b>\n\nYarın daha güzel bir gün olacak! ✨'}
-]
-
-# ==================== LOG AYARLARI ====================
+# ==================== LOG AYARI ====================
 logging.basicConfig(
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
     level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
     handlers=[
-        logging.StreamHandler(),
-        logging.FileHandler('bot.log', encoding='utf-8')
+        logging.StreamHandler(sys.stdout)
     ]
 )
 logger = logging.getLogger(__name__)
 
-# ==================== BOT FONKSİYONLARI ====================
-def send_scheduled_message(message_text):
-    """Zamanlanmış mesajı gönder"""
-    try:
-        bot = Bot(token=TOKEN)
-        bot.send_message(
-            chat_id=CHANNEL,
-            text=message_text,
-            parse_mode='HTML',
-            disable_web_page_preview=True
-        )
-        logger.info(f"Mesaj gönderildi: {message_text[:50]}...")
-    except Exception as e:
-        logger.error(f"Mesaj gönderilemedi: {e}")
-
-def convert_tr_to_utc(tr_time):
-    """Türkiye saatini UTC'ye çevir"""
-    try:
-        tr_tz = pytz.timezone('Europe/Istanbul')
-        today = datetime.now().date()
+# ==================== BOT SINIFI ====================
+class TelegramSchedulerBot:
+    def __init__(self):
+        if TOKEN == "TEMP_TOKEN":
+            logger.warning("⚠️  TEMP_TOKEN kullanılıyor! Gerçek token ekleyin.")
         
-        # TR saati ile datetime oluştur
-        tr_datetime = tr_tz.localize(
-            datetime.combine(today, datetime.strptime(tr_time, '%H:%M').time())
-        )
+        self.bot = telegram.Bot(token=TOKEN)
+        self.channel = CHANNEL
+        self.tr_timezone = pytz.timezone('Europe/Istanbul')
         
-        # UTC'ye çevir
-        utc_datetime = tr_datetime.astimezone(pytz.UTC)
-        utc_time_str = utc_datetime.strftime('%H:%M')
-        
-        logger.info(f"Zaman çevrildi: {tr_time} TR -> {utc_time_str} UTC")
-        return utc_time_str
-    except Exception as e:
-        logger.error(f"Zaman çevirme hatası: {e}")
-        return tr_time
-
-def setup_schedules():
-    """Zamanlamaları ayarla"""
-    logger.info("Zamanlamalar ayarlanıyor...")
+        logger.info("=" * 50)
+        logger.info("🤖 TELEGRAM ZAMANLAYICI BOT (Replit)")
+        logger.info(f"📍 Kanal: {self.channel}")
+        logger.info("=" * 50)
     
-    for schedule_item in MESSAGE_SCHEDULES:
-        tr_time = schedule_item['time']
-        message = schedule_item['message']
-        utc_time = convert_tr_to_utc(tr_time)
-        
-        # Schedule kütüphanesi için zamanı ayarla
-        schedule.every().day.at(utc_time).do(
-            send_scheduled_message, 
-            message_text=message
-        )
-        
-        logger.info(f"{tr_time} TR -> {utc_time} UTC : {message[:30]}...")
+    def get_tr_time(self):
+        """Şu anki Türkiye saatini al"""
+        return datetime.now(self.tr_timezone).strftime('%d.%m.%Y %H:%M:%S')
     
-    logger.info(f"Toplam {len(MESSAGE_SCHEDULES)} zamanlama ayarlandı")
-    return schedule
-
-def check_bot_permissions():
-    """Bot izinlerini kontrol et"""
-    try:
-        bot = Bot(token=TOKEN)
-        
-        # Bot bilgilerini al
-        bot_info = bot.get_me()
-        logger.info(f"🤖 Bot: @{bot_info.username} ({bot_info.first_name})")
-        
-        # Kanalı kontrol et
+    async def send_to_channel(self, message="📢 Varsayılan mesaj"):
+        """Kanal'a mesaj gönder"""
         try:
-            chat = bot.get_chat(CHANNEL)
-            logger.info(f"📢 Kanal: {chat.title}")
+            full_message = f"{message}\n🕐 {self.get_tr_time()}"
             
-            # Test mesajı gönder
-            bot.send_message(
-                chat_id=CHANNEL,
-                text="✅ <b>Bot başlatıldı!</b>\n\nZamanlanmış mesajlar aktif edildi.",
-                parse_mode='HTML'
+            await self.bot.send_message(
+                chat_id=self.channel,
+                text=full_message,
+                parse_mode="HTML"
             )
-            logger.info("✅ Test mesajı gönderildi")
+            
+            logger.info(f"✅ Mesaj gönderildi: {message[:30]}...")
             return True
             
-        except TelegramError as e:
-            logger.error(f"❌ Kanal hatası: {e}")
-            logger.warning("⚠️ Botu kanala admin olarak eklediğinizden emin olun!")
+        except Exception as e:
+            logger.error(f"❌ Hata: {e}")
             return False
+    
+    def setup_schedule(self):
+        """Zamanlanmış mesajlar"""
+        
+        # TEST: Her 10 dakikada bir
+        schedule.every(10).minutes.do(
+            lambda: asyncio.run(self.send_to_channel("🧪 <b>TEST</b>\nReplit'ten mesaj!"))
+        )
+        
+        # Gerçek zamanlamalar (yorum satırı)
+        # schedule.every().day.at("09:00").do(
+        #     lambda: asyncio.run(self.send_to_channel("🌅 <b>GÜNAYDIN!</b>"))
+        # )
+        
+        logger.info("📅 Zamanlamalar ayarlandı (10 dakikada bir test)")
+    
+    async def startup_check(self):
+        """Bot başlangıç kontrolü"""
+        try:
+            bot_info = await self.bot.get_me()
+            logger.info(f"🤖 Bot: @{bot_info.username}")
             
-    except Exception as e:
-        logger.error(f"❌ Bot bağlantı hatası: {e}")
-        return False
-
-def keep_alive():
-    """Botun sürekli çalışmasını sağla (Replit için)"""
-    try:
-        # UptimeRobot veya benzeri ping servisleri için basit bir endpoint
-        from flask import Flask
-        app = Flask(__name__)
-        
-        @app.route('/')
-        def home():
-            return 'Bot çalışıyor!'
-        
-        # Flask'ı thread'de çalıştır
-        from threading import Thread
-        thread = Thread(target=lambda: app.run(host='0.0.0.0', port=8080, debug=False))
-        thread.daemon = True
-        thread.start()
-        logger.info("🌐 Keep-alive server başlatıldı")
-        
-    except Exception as e:
-        logger.warning(f"Keep-alive başlatılamadı: {e}")
-
-# ==================== ANA PROGRAM ====================
-def main():
-    """Ana bot fonksiyonu"""
-    logger.info("=" * 50)
-    logger.info("🤖 BOT BAŞLATILIYOR...")
-    logger.info("=" * 50)
-    
-    # Token kontrolü
-    if not TOKEN:
-        logger.error("❌ TELEGRAM_TOKEN bulunamadı!")
-        logger.info("ℹ️ Replit Secrets'a TELEGRAM_TOKEN ekleyin")
-        return
-    
-    if not CHANNEL:
-        logger.error("❌ TELEGRAM_CHANNEL bulunamadı!")
-        return
-    
-    logger.info(f"🔑 Token: {'*' * 20}{TOKEN[-5:]}")
-    logger.info(f"📢 Kanal: {CHANNEL}")
-    
-    # Türkiye saati
-    tr_timezone = pytz.timezone('Europe/Istanbul')
-    tr_time = datetime.now(tr_timezone).strftime('%d.%m.%Y %H:%M:%S')
-    logger.info(f"🕐 Türkiye Saati: {tr_time}")
-    logger.info("")
-    
-    # Bot izinlerini kontrol et
-    if not check_bot_permissions():
-        logger.error("❌ Bot izinleri yetersiz! İşlem durduruldu.")
-        return
-    
-    # Zamanlamaları ayarla
-    schedules = setup_schedules()
-    
-    # Keep-alive başlat (Replit için)
-    keep_alive()
-    
-    logger.info("✅ Zamanlayıcı başlatıldı, mesajlar bekleniyor...")
-    logger.info("=" * 50)
-    
-    # Ana döngü
-    try:
-        while True:
-            schedules.run_pending()
-            time.sleep(60)  # 1 dakika bekle
+            startup_msg = (
+                "🚀 <b>BOT REPLIT'TE AKTİF!</b>\n\n"
+                f"🤖 Bot: @{bot_info.username}\n"
+                f"📅 Tarih: {self.get_tr_time()}\n"
+                f"📍 Host: Replit.com\n\n"
+                "✅ Test mesajları başladı!"
+            )
             
-            # Her saat başı durum logu
-            if datetime.now().minute == 0:
-                logger.info(f"⏰ Sistem çalışıyor: {datetime.now().strftime('%H:%M')}")
+            await self.send_to_channel(startup_msg)
+            logger.info("✅ Başlangıç kontrolü tamamlandı")
+            
+        except Exception as e:
+            logger.error(f"❌ Başlangıç hatası: {e}")
+    
+    def run(self):
+        """Ana çalıştırıcı"""
+        try:
+            # Asenkron startup
+            asyncio.run(self.startup_check())
+            
+            # Zamanlamaları ayarla
+            self.setup_schedule()
+            
+            logger.info("🔄 Zamanlayıcı başlatıldı...")
+            
+            # Ana döngü
+            while True:
+                schedule.run_pending()
+                time.sleep(1)
                 
-    except KeyboardInterrupt:
-        logger.info("👋 Bot durduruluyor...")
-    except Exception as e:
-        logger.error(f"❌ Beklenmeyen hata: {e}")
+        except KeyboardInterrupt:
+            logger.info("⏹️  Bot durduruldu")
+        except Exception as e:
+            logger.error(f"💥 Kritik hata: {e}")
 
-# ==================== BAŞLATMA ====================
-if __name__ == '__main__':
-    main()
+# ==================== PROGRAM BAŞLANGICI ====================
+if __name__ == "__main__":
+    logger.info("▶️  Replit Bot başlatılıyor...")
+    
+    # Bot nesnesi oluştur ve çalıştır
+    bot = TelegramSchedulerBot()
+    bot.run()
