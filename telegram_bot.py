@@ -25,12 +25,12 @@ logger = logging.getLogger(__name__)
 # ==================== HATA KONTROLÜ ====================
 if not TOKEN:
     logger.error("❌ HATA: TELEGRAM_TOKEN environment variable ayarlanmamış!")
-    logger.error("Render Dashboard → Environment Variables ekleyin")
+    logger.error("Replit Secrets → Environment Variables ekleyin")
     sys.exit(1)
 
 if not CHANNEL:
     logger.error("❌ HATA: TELEGRAM_CHANNEL environment variable ayarlanmamış!")
-    logger.error("Render Dashboard → Environment Variables ekleyin")
+    logger.error("Replit Secrets → Environment Variables ekleyin")
     sys.exit(1)
 
 # ==================== BOT SINIFI ====================
@@ -159,7 +159,7 @@ class TelegramSchedulerBot:
                 "🚀 <b>BOT AKTİF!</b>\n\n"
                 f"🤖 Bot: @{bot_info.username}\n"
                 f"📅 Tarih: {self.get_tr_time()}\n"
-                f"📍 Host: Render.com\n\n"
+                f"📍 Host: Replit\n\n"
                 "✅ Zamanlanmış mesajlar hazır!"
             )
             
