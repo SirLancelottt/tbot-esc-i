@@ -23,11 +23,11 @@ author = "agent"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "python main_2.py"
+args = "python telegram_bots.py"
 
 [workflows.workflow.metadata]
 outputType = "console"
 
 [deployment]
 deploymentTarget = "vm"
-run = ["python", "main_2.py"]
+run = ["python", "telegram_bots.py"]
