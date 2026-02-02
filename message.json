@@ -40,13 +40,6 @@
         "type": "with_image",
         "image_url": "https://pixeldrain.com/api/file/is4GEihy?download"
       }
-    ],
-    "kizilkobragorukle": [
-      {
-        "text": "PDF dosyası 📄",
-        "type": "with_file",
-        "file_url": "https://pixeldrain.com/api/file/pdf123?download"
-      }
     ]
   }
 }
