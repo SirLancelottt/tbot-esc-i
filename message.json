@@ -76,5 +76,17 @@
         "type": "text_only"
       }
     ],
+    "gunduz": [
+      {
+        "text": "Grubumuzdaki Tüm Arkadaşlara <b>GÜNAYDIN</b> Diyoruz.",
+        "type": "text_only"
+      }
+    ],
+    "gece": [
+      {
+        "text": "Sabah Moduna Kadar Şimdilik <b>İYİ GECELER</b>",
+        "type": "text_only"
+      }
+    ]
   }
 }
