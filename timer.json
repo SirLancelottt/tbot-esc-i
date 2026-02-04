@@ -1,33 +1,283 @@
 {
   "meta": {
-    "last_updated": "2026-02-02 18:05:00",
+    "last_updated": "2026-02-04 15:05:00",
     "version": "1.0"
   },
   "schedule": [
     {
-      "time": "02:49",
+      "time": "09:00",
       "disabled": false,
-      "username": "ozlem_kedi"
+      "username": "gunduz"
     },
     {
-      "time": "02:51",
+      "time": "10:00",
       "disabled": false,
-      "username": "ozlem_kedi"
+      "username": "bayan"
     },
     {
-      "time": "02:53",
+      "time": "12:00",
       "disabled": false,
-      "username": "ozlem_kedi"
+      "username": "bayan"
+    },
+    {
+      "time": "14:00",
+      "disabled": false,
+      "username": "bayan"
     },    
     {
-      "time": "02:55",
+      "time": "16:00",
       "disabled": false,
-      "username": "ozlem_kedi"
+      "username": "bayan"
+    },
+    {
+      "time": "18:00",
+      "disabled": false,
+      "username": "bayan"
+    },
+    {
+      "time": "20:00",
+      "disabled": false,
+      "username": "bayan"
+    },
+    {
+      "time": "22:00",
+      "disabled": false,
+      "username": "bayan"
+    }, 
+    {
+      "time": "10:30",
+      "disabled": false,
+      "username": "yer"
+    },
+    {
+      "time": "12:30",
+      "disabled": false,
+      "username": "yer"
+    },
+    {
+      "time": "14:30",
+      "disabled": false,
+      "username": "yer"
     },    
     {
-      "time": "02:57",
+      "time": "16:30",
       "disabled": false,
-      "username": "ozlem_kedi"
+      "username": "yer"
+    },
+    {
+      "time": "18:30",
+      "disabled": false,
+      "username": "yer"
+    },
+    {
+      "time": "20:30",
+      "disabled": false,
+      "username": "yer"
+    },
+    {
+      "time": "22:30",
+      "disabled": false,
+      "username": "yer"
+    },
+    {
+      "time": "11:00",
+      "disabled": false,
+      "username": "trv"
+    },
+    {
+      "time": "13:00",
+      "disabled": false,
+      "username": "trv"
+    },
+    {
+      "time": "15:00",
+      "disabled": false,
+      "username": "trv"
+    },    
+    {
+      "time": "17:00",
+      "disabled": false,
+      "username": "trv"
+    },
+    {
+      "time": "19:00",
+      "disabled": false,
+      "username": "trv"
+    },
+    {
+      "time": "21:00",
+      "disabled": false,
+      "username": "trv"
+    },
+    {
+      "time": "23:00",
+      "disabled": false,
+      "username": "trv"
+    }, 
+    {
+      "time": "09:19",
+      "disabled": false,
+      "username": "kedi"
+    },
+    {
+      "time": "10:19",
+      "disabled": false,
+      "username": "kedi"
+    },
+    {
+      "time": "11:19",
+      "disabled": false,
+      "username": "kedi"
+    },    
+    {
+      "time": "12:19",
+      "disabled": false,
+      "username": "kedi"
+    },
+        {
+      "time": "13:19",
+      "disabled": false,
+      "username": "kedi"
+    },
+    {
+      "time": "14:19",
+      "disabled": false,
+      "username": "kedi"
+    },
+    {
+      "time": "15:19",
+      "disabled": false,
+      "username": "kedi"
+    },    
+    {
+      "time": "16:19",
+      "disabled": false,
+      "username": "kedi"
+    },
+        {
+      "time": "17:19",
+      "disabled": false,
+      "username": "kedi"
+    },
+    {
+      "time": "18:19",
+      "disabled": false,
+      "username": "kedi"
+    },
+    {
+      "time": "19:19",
+      "disabled": false,
+      "username": "kedi"
+    },    
+    {
+      "time": "20:19",
+      "disabled": false,
+      "username": "kedi"
+    },
+        {
+      "time": "21:19",
+      "disabled": false,
+      "username": "kedi"
+    },
+    {
+      "time": "22:19",
+      "disabled": false,
+      "username": "kedi"
+    },
+    {
+      "time": "23:19",
+      "disabled": false,
+      "username": "kedi"
+    },    
+    {
+      "time": "00:19",
+      "disabled": false,
+      "username": "kedi"
+    },
+    {
+      "time": "09:39",
+      "disabled": false,
+      "username": "simge"
+    },
+    {
+      "time": "10:39",
+      "disabled": false,
+      "username": "simge"
+    },
+    {
+      "time": "11:39",
+      "disabled": false,
+      "username": "simge"
+    },    
+    {
+      "time": "12:39",
+      "disabled": false,
+      "username": "simge"
+    },
+        {
+      "time": "13:39",
+      "disabled": false,
+      "username": "simge"
+    },
+    {
+      "time": "14:39",
+      "disabled": false,
+      "username": "simge"
+    },
+    {
+      "time": "15:39",
+      "disabled": false,
+      "username": "simge"
+    },    
+    {
+      "time": "16:39",
+      "disabled": false,
+      "username": "simge"
+    },
+        {
+      "time": "17:39",
+      "disabled": false,
+      "username": "simge"
+    },
+    {
+      "time": "18:39",
+      "disabled": false,
+      "username": "simge"
+    },
+    {
+      "time": "19:39",
+      "disabled": false,
+      "username": "simge"
+    },    
+    {
+      "time": "20:39",
+      "disabled": false,
+      "username": "simge"
+    },
+        {
+      "time": "21:39",
+      "disabled": false,
+      "username": "simge"
+    },
+    {
+      "time": "22:39",
+      "disabled": false,
+      "username": "simge"
+    },
+    {
+      "time": "23:39",
+      "disabled": false,
+      "username": "simge"
+    },    
+    {
+      "time": "00:39",
+      "disabled": false,
+      "username": "simge"
+    },
+    {
+      "time": "23:59",
+      "disabled": false,
+      "username": "gece"
     }
   ]
 }
