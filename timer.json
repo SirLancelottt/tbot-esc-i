@@ -5,7 +5,7 @@
   },
   "schedule": [
     {
-      "time": "09:00",
+      "time": "07:00",
       "disabled": false,
       "username": "gunduz"
     },
@@ -120,27 +120,12 @@
       "username": "kedi"
     },
     {
-      "time": "10:19",
-      "disabled": false,
-      "username": "kedi"
-    },
-    {
       "time": "11:19",
       "disabled": false,
       "username": "kedi"
     },    
     {
-      "time": "12:19",
-      "disabled": false,
-      "username": "kedi"
-    },
-        {
       "time": "13:19",
-      "disabled": false,
-      "username": "kedi"
-    },
-    {
-      "time": "14:19",
       "disabled": false,
       "username": "kedi"
     },
@@ -150,17 +135,7 @@
       "username": "kedi"
     },    
     {
-      "time": "16:19",
-      "disabled": false,
-      "username": "kedi"
-    },
-        {
       "time": "17:19",
-      "disabled": false,
-      "username": "kedi"
-    },
-    {
-      "time": "18:19",
       "disabled": false,
       "username": "kedi"
     },
@@ -168,19 +143,9 @@
       "time": "19:19",
       "disabled": false,
       "username": "kedi"
-    },    
-    {
-      "time": "20:19",
-      "disabled": false,
-      "username": "kedi"
     },
-        {
+    {
       "time": "21:19",
-      "disabled": false,
-      "username": "kedi"
-    },
-    {
-      "time": "22:19",
       "disabled": false,
       "username": "kedi"
     },
@@ -190,17 +155,52 @@
       "username": "kedi"
     },    
     {
-      "time": "00:19",
+      "time": "01:19",
       "disabled": false,
       "username": "kedi"
     },
     {
-      "time": "02:19",
+      "time": "10:29",
       "disabled": false,
-      "username": "kedi"
+      "username": "sevgi"
     },
     {
-      "time": "23:59",
+      "time": "12:29",
+      "disabled": false,
+      "username": "sevgi"
+    },    
+    {
+      "time": "14:29",
+      "disabled": false,
+      "username": "sevgi"
+    },
+    {
+      "time": "16:29",
+      "disabled": false,
+      "username": "sevgi"
+    }, 
+    {
+      "time": "18:29",
+      "disabled": false,
+      "username": "sevgi"
+    },
+    {
+      "time": "20:29",
+      "disabled": false,
+      "username": "sevgi"
+    },
+    {
+      "time": "22:29",
+      "disabled": false,
+      "username": "sevgi"
+    },
+    {
+      "time": "00:29",
+      "disabled": false,
+      "username": "sevgi"
+    },   
+    {
+      "time": "00:59",
       "disabled": false,
       "username": "gece"
     }
