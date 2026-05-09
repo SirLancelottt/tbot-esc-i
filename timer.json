@@ -1,357 +1,357 @@
 {
   "meta": {
-    "last_updated": "2026-02-05 00:05:00",
+    "last_updated": "2026-05-09 03:00:00",
     "version": "1.0"
   },
   "schedule": [
      {
       "time": "07:00",
-      "disabled": "false",
+      "disabled": false,
       "username": "gunduz"
      },
      {
       "time": "09:00",
-      "disabled": "false",
+      "disabled": false,
       "username": "kedi5"
      },
      {
       "time": "09:15",
-      "disabled": "false",
+      "disabled": false,
       "username": "bayan"
      },
      {
       "time": "09:30",
-      "disabled": "false",
+      "disabled": false,
       "username": "aycan1"
      },
      {
       "time": "09:45",
-      "disabled": "false",
+      "disabled": false,
       "username": "kedi2"
      },
      {
       "time": "10:00",
-      "disabled": "false",
+      "disabled": false,
       "username": "yer"
      },
      {
       "time": "10:15",
-      "disabled": "false",
+      "disabled": false,
       "username": "kedi4"
      },
      {
       "time": "10:30",
-      "disabled": "false",
+      "disabled": false,
       "username": "sevgi1"
      },
      {
       "time": "10:45",
-      "disabled": "false",
+      "disabled": false,
       "username": "kedi5"
      },
      {
       "time": "11:00",
-      "disabled": "false",
+      "disabled": false,
       "username": "ozlem2"
      },
      {
       "time": "11:15",
-      "disabled": "false",
+      "disabled": false,
       "username": "yer"
      },
      {
       "time": "11:30",
-      "disabled": "false",
+      "disabled": false,
       "username": "sevgi3"
      },
      {
       "time": "11:45",
-      "disabled": "false",
+      "disabled": false,
       "username": "ozlem3"
      },
      {
       "time": "12:00",
-      "disabled": "false",
+      "disabled": false,
       "username": "kedi2"
      },
      {
       "time": "12:15",
-      "disabled": "false",
+      "disabled": false,
       "username": "yaren1"
      },
      {
       "time": "12:30",
-      "disabled": "false",
+      "disabled": false,
       "username": "sevgi2"
      },
      {
       "time": "12:45",
-      "disabled": "false",
+      "disabled": false,
       "username": "yer"
      },
      {
       "time": "13:00",
-      "disabled": "false",
+      "disabled": false,
       "username": "trv"
      },
      {
       "time": "13:15",
-      "disabled": "false",
+      "disabled": false,
       "username": "kedi4"
      },
      {
       "time": "13:30",
-      "disabled": "false",
+      "disabled": false,
       "username": "bayan"
      },
      {
       "time": "13:45",
-      "disabled": "false",
+      "disabled": false,
       "username": "buse1"
      },
      {
       "time": "14:00",
-      "disabled": "false",
+      "disabled": false,
       "username": "sevgi2"
      },
      {
       "time": "14:15",
-      "disabled": "false",
+      "disabled": false,
       "username": "yer"
      },
      {
       "time": "14:30",
-      "disabled": "false",
+      "disabled": false,
       "username": "sevgi3"
      },
      {
       "time": "14:45",
-      "disabled": "false",
+      "disabled": false,
       "username": "buse1"
      },
      {
       "time": "15:00",
-      "disabled": "false",
+      "disabled": false,
       "username": "trv"
      },
      {
       "time": "15:15",
-      "disabled": "false",
+      "disabled": false,
       "username": "ozlem3"
      },
      {
       "time": "15:30",
-      "disabled": "false",
+      "disabled": false,
       "username": "kedi3"
      },
      {
       "time": "15:45",
-      "disabled": "false",
+      "disabled": false,
       "username": "buse1"
      },
      {
       "time": "16:00",
-      "disabled": "false",
+      "disabled": false,
       "username": "bayan"
      },
      {
       "time": "16:15",
-      "disabled": "false",
+      "disabled": false,
       "username": "buse1"
      },
      {
       "time": "16:30",
-      "disabled": "false",
+      "disabled": false,
       "username": "kedi3"
      },
      {
       "time": "16:45",
-      "disabled": "false",
+      "disabled": false,
       "username": "bayan"
      },
      {
       "time": "17:00",
-      "disabled": "false",
+      "disabled": false,
       "username": "sevgi3"
      },
      {
       "time": "17:15",
-      "disabled": "false",
+      "disabled": false,
       "username": "ozlem2"
      },
      {
       "time": "17:30",
-      "disabled": "false",
+      "disabled": false,
       "username": "kedi1"
      },
      {
       "time": "17:45",
-      "disabled": "false",
+      "disabled": false,
       "username": "trv"
      },
      {
       "time": "18:00",
-      "disabled": "false",
+      "disabled": false,
       "username": "kedi4"
      },
      {
       "time": "18:15",
-      "disabled": "false",
+      "disabled": false,
       "username": "sevgi1"
      },
      {
       "time": "18:30",
-      "disabled": "false",
+      "disabled": false,
       "username": "ozlem3"
      },
      {
       "time": "18:45",
-      "disabled": "false",
+      "disabled": false,
       "username": "bayan"
      },
      {
       "time": "19:00",
-      "disabled": "false",
+      "disabled": false,
       "username": "yaren1"
      },
      {
       "time": "19:15",
-      "disabled": "false",
+      "disabled": false,
       "username": "ozlem2"
      },
      {
       "time": "19:30",
-      "disabled": "false",
+      "disabled": false,
       "username": "bayan"
      },
      {
       "time": "19:45",
-      "disabled": "false",
+      "disabled": false,
       "username": "kedi3"
      },
      {
       "time": "20:00",
-      "disabled": "false",
+      "disabled": false,
       "username": "ozlem2"
      },
      {
       "time": "20:15",
-      "disabled": "false",
+      "disabled": false,
       "username": "trv"
      },
      {
       "time": "20:30",
-      "disabled": "false",
+      "disabled": false,
       "username": "aycan1"
      },
      {
       "time": "20:45",
-      "disabled": "false",
+      "disabled": false,
       "username": "kedi1"
      },
      {
       "time": "21:00",
-      "disabled": "false",
+      "disabled": false,
       "username": "ozlem1"
      },
      {
       "time": "21:15",
-      "disabled": "false",
+      "disabled": false,
       "username": "kedi1"
      },
      {
       "time": "21:30",
-      "disabled": "false",
+      "disabled": false,
       "username": "ozlem3"
      },
      {
       "time": "21:45",
-      "disabled": "false",
+      "disabled": false,
       "username": "yer"
      },
      {
       "time": "22:00",
-      "disabled": "false",
+      "disabled": false,
       "username": "ozlem1"
      },
      {
       "time": "22:15",
-      "disabled": "false",
+      "disabled": false,
       "username": "aycan1"
      },
      {
       "time": "22:30",
-      "disabled": "false",
+      "disabled": false,
       "username": "sevgi1"
      },
      {
       "time": "22:45",
-      "disabled": "false",
+      "disabled": false,
       "username": "kedi2"
      },
      {
       "time": "23:00",
-      "disabled": "false",
+      "disabled": false,
       "username": "kedi5"
      },
      {
       "time": "23:15",
-      "disabled": "false",
+      "disabled": false,
       "username": "aycan1"
      },
      {
       "time": "23:30",
-      "disabled": "false",
+      "disabled": false,
       "username": "yaren1"
      },
      {
       "time": "23:45",
-      "disabled": "false",
+      "disabled": false,
       "username": "ozlem1"
      },
      {
       "time": "00:00",
-      "disabled": "false",
+      "disabled": false,
       "username": "kedi5"
      },
      {
       "time": "00:15",
-      "disabled": "false",
+      "disabled": false,
       "username": "yer"
      },
      {
       "time": "00:30",
-      "disabled": "false",
+      "disabled": false,
       "username": "aycan1"
      },
      {
       "time": "00:45",
-      "disabled": "false",
+      "disabled": false,
       "username": "kedi1"
      },
      {
       "time": "01:00",
-      "disabled": "false",
+      "disabled": false,
       "username": "gece"
      },
      {
       "time": "01:15",
-      "disabled": "false",
+      "disabled": false,
       "username": "sevgi2"
      },
      {
       "time": "01:30",
-      "disabled": "false",
+      "disabled": false,
       "username": "kedi3"
      },
      {
       "time": "01:45",
-      "disabled": "false",
+      "disabled": false,
       "username": "trv"
      },
      {
       "time": "02:00",
-      "disabled": "false",
+      "disabled": false,
       "username": "ozlem3"
      }
   ]
